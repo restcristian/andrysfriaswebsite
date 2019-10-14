@@ -17,6 +17,8 @@ const Col = styled.div`
 `
 const SliderWrapper = styled.div`
   position: relative;
+  display:flex;
+  width:100%;
 
   > div {
     &:not(:first-child) {
@@ -25,6 +27,8 @@ const SliderWrapper = styled.div`
       left: 0;
       width: 100%;
       height: 100%;
+      opacity:0;
+      visibility:hidden;
     }
   }
 `
