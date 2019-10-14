@@ -15,7 +15,19 @@ const Col = styled.div`
     }
   }
 `
+const SliderWrapper = styled.div`
+  position: relative;
 
+  > div {
+    &:not(:first-child) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+`
 const Slide = styled.div`
   background-color: ${props => props.backgroundColor};
   width: 100%;
@@ -57,32 +69,32 @@ const InfoTable = styled.table`
     text-transform: uppercase;
     border: none;
     padding: 0;
-    font-weight:500;
+    font-weight: 500;
   }
   td {
     padding: 0;
     border: none;
   }
 
-  @media(max-width:391px){
-      font-size:0.8rem;
+  @media (max-width: 391px) {
+    font-size: 0.8rem;
   }
 `
 
 const ViewMoreLink = styled.a`
-    text-decoration:none;
-    display:inline-block;
-    font-family: "Source Code Pro", monospace;
-    color:#fff;
-    font-size: 0.9rem;
-    padding: 27px 97px;
-    border: 1px solid #fff;
-    border-radius: 100px 100px;
+  text-decoration: none;
+  display: inline-block;
+  font-family: "Source Code Pro", monospace;
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 27px 97px;
+  border: 1px solid #fff;
+  border-radius: 100px 100px;
 
-    @media(max-width:391px){
-        font-size: 0.8rem;
-        padding: 27px 62px;
-    }
+  @media (max-width: 391px) {
+    font-size: 0.8rem;
+    padding: 27px 62px;
+  }
 `
 
 const CustomContainer = styled(Container)`
@@ -114,7 +126,7 @@ const CustomSection = styled(Section)`
   align-items: stretch;
 
   @media (max-width: 897px) {
-      height:auto;
+    height: auto;
   }
 `
 
@@ -132,6 +144,36 @@ function ProjectList() {
         role: "Designer",
         client: "Univision",
         year: 2017,
+        link: "https://testlink.com",
+      },
+    },
+    {
+      id: "Project2",
+      pic: require("../../images/project2.png"),
+      backgroundColor: "#f0494c",
+      info: {
+        type: "Website",
+        title: "Haidy Cruz",
+        description:
+          "Haidy Cruz is a personal trainer and nutritional guide from Dominican Republic, known as the Queen of fitness with several awards in competitions.",
+        role: "Designer",
+        client: "Haidy Cruz",
+        year: 2019,
+        link: "https://testlink.com",
+      },
+    },
+    {
+      id: "Project3",
+      pic: require("../../images/project3.png"),
+      backgroundColor: "#333e7a",
+      info: {
+        type: "Branding",
+        title: "SICA",
+        description:
+          "The Central American Integration System (SICA) is an international organization that has been leading the economic and political side of Central American states since 1993.",
+        role: "Designer",
+        client: "Personal",
+        year: 2019,
         link: "https://testlink.com",
       },
     },
@@ -159,14 +201,16 @@ function ProjectList() {
               <td>{project.info.year}</td>
             </tr>
           </InfoTable>
-          <ViewMoreLink href= {project.info.link}>View more</ViewMoreLink>
+          <ViewMoreLink href={project.info.link}>View more</ViewMoreLink>
         </Col>
       </Slide>
     ))
   return (
     <CustomSection style={{}}>
       <CustomContainer>
-        <CustomRow>{renderProjects()}</CustomRow>
+        <CustomRow>
+          <SliderWrapper>{renderProjects()}</SliderWrapper>
+        </CustomRow>
       </CustomContainer>
     </CustomSection>
   )
