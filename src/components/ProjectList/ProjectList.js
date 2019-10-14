@@ -42,7 +42,7 @@ const Title = styled.h3`
 const Description = styled.p`
   color: #fff;
   margin: 2.2rem 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Source Code Pro", monospace;
   font-size: 0.9rem;
 `
 
@@ -57,11 +57,32 @@ const InfoTable = styled.table`
     text-transform: uppercase;
     border: none;
     padding: 0;
+    font-weight:500;
   }
   td {
     padding: 0;
     border: none;
   }
+
+  @media(max-width:391px){
+      font-size:0.8rem;
+  }
+`
+
+const ViewMoreLink = styled.a`
+    text-decoration:none;
+    display:inline-block;
+    font-family: "Source Code Pro", monospace;
+    color:#fff;
+    font-size: 0.9rem;
+    padding: 27px 97px;
+    border: 1px solid #fff;
+    border-radius: 100px 100px;
+
+    @media(max-width:391px){
+        font-size: 0.8rem;
+        padding: 27px 62px;
+    }
 `
 
 const CustomContainer = styled(Container)`
@@ -76,7 +97,7 @@ const CustomRow = styled(Row)`
   align-items: stretch;
   max-width: none;
 
-  @media (max-width: 767px) {
+  @media (max-width: 897px) {
     ${Slide} {
       display: block;
       padding: 40px 24px;
@@ -92,7 +113,7 @@ const CustomSection = styled(Section)`
   padding-top: 0;
   align-items: stretch;
 
-  @media (max-width: 767px) {
+  @media (max-width: 897px) {
       height:auto;
   }
 `
@@ -138,6 +159,7 @@ function ProjectList() {
               <td>{project.info.year}</td>
             </tr>
           </InfoTable>
+          <ViewMoreLink href= {project.info.link}>View more</ViewMoreLink>
         </Col>
       </Slide>
     ))
