@@ -1,22 +1,58 @@
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
-import React from "react"
+import React, { useState } from "react"
+import Logo from "../images/logo.svg"
+import { Container } from '../Layout/CommonStyled'
+import styled from "styled-components"
 
-const Header = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-      marginBottom: `1.45rem`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
+const HeaderStyled = styled.header`
+  margin-bottom: 1.45rem;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:9999;
+`
+
+const HeaderWrapperStyled = styled(Container)`
+  padding: 1.45rem 1.0875rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`
+
+const LogoStyled = styled.img`
+  width: 56px;
+  margin: 0;
+`
+
+const MenuButtonStyled = styled.button`
+  border: none;
+  appearance: none;
+  background: #333333;
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  > span {
+    position:absolute;
+    top:-99999px;
+    left:-9999px;
+    display:block;
+  }
+`
+
+const Header = ({ siteTitle }) => {
+  const [isNavigationOpen, setIsNavigationOpen] = useState(false)
+
+  const onMenuToggle = () => {
+    setIsNavigationOpen(!isNavigationOpen)
+  }
+  return (
+    <HeaderStyled>
+      <HeaderWrapperStyled>
         <Link
           to="/"
           style={{
@@ -24,12 +60,13 @@ const Header = ({ siteTitle }) => (
             textDecoration: `none`,
           }}
         >
-          {siteTitle}
+          <LogoStyled src={Logo} alt="Andrys Logo" />
         </Link>
-      </h1>
-    </div>
-  </header>
-)
+        <MenuButtonStyled onClick={onMenuToggle}><span>ToggleMenu</span></MenuButtonStyled>
+      </HeaderWrapperStyled>
+    </HeaderStyled>
+  )
+}
 
 Header.propTypes = {
   siteTitle: PropTypes.string,
