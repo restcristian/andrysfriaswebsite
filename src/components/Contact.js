@@ -60,7 +60,7 @@ const CustomRow = styled(Row)`
 
 function Contact() {
   return (
-    <Section className="s-contact" backgroundColor="#333333">
+    <Section className="s-contact" backgroundColor="#333333" style = {{ paddingTop: 0 }}>
       <Container>
         <CustomRow justifyContent="center">
           <Wrapper>
