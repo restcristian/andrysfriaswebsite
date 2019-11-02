@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useRef } from "react"
 import { Container, Section, Row } from "../../Layout/CommonStyled"
 import Logo from "../../components/Logo"
+import { useScroll } from '../../hooks';
 import styled from "styled-components"
 
 const Col = styled.div`
@@ -135,6 +136,10 @@ const CustomSection = styled(Section)`
 `
 
 function ProjectList() {
+
+  const [scroll, setScroll] = useScroll();
+  const sectionRef = useRef(null);
+  
   const projects = [
     {
       id: "Project1",
@@ -208,9 +213,10 @@ function ProjectList() {
           <ViewMoreLink href={project.info.link}>View more</ViewMoreLink>
         </Col>
       </Slide>
-    ))
+    ));
+
   return (
-    <CustomSection style={{}}>
+    <CustomSection ref = {sectionRef}  >
       <CustomContainer>
         <CustomRow>
           <SliderWrapper>{renderProjects()}</SliderWrapper>
