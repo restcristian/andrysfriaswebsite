@@ -4,6 +4,7 @@ import Logo from "../../components/Logo"
 import { useScroll } from "../../hooks"
 import styled from "styled-components"
 import { Controller, Scene } from "react-scrollmagic"
+import { Tween, Timeline } from "react-gsap"
 
 const Col = styled.div`
   width: 50%;
@@ -18,21 +19,8 @@ const Col = styled.div`
   }
 `
 const SliderWrapper = styled.div`
-  position: relative;
-  display: flex;
+  display: block;
   width: 100%;
-
-  > div {
-    &:not(:first-child) {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
 `
 const Slide = styled.div`
   background-color: ${props => props.backgroundColor};
@@ -130,6 +118,21 @@ const CustomRow = styled(Row)`
 const CustomSection = styled(Section)`
   padding-top: 0;
   align-items: stretch;
+  overflow: hidden;
+  height: auto;
+  background-color: #333333;
+
+  #pinContainer {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+
+  #pinContainer .panel {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+  }
 
   @media (max-width: 897px) {
     height: auto;
@@ -190,45 +193,51 @@ function ProjectList() {
 
   const renderProjects = () =>
     projects.map(project => (
-      <Slide key={project.id} backgroundColor={project.backgroundColor}>
-        <Col className="col-image">
-          <img src={project.pic} alt={project.title} />
-        </Col>
-        <Col className="col-info">
-          <Type>{project.info.type}</Type>
-          <Title>{project.info.title}</Title>
-          <Description>{project.info.description}</Description>
-          <InfoTable>
-            <tbody>
-              <tr>
-                <th>Role</th>
-                <th>Client</th>
-                <th>Year</th>
-              </tr>
-              <tr>
-                <td>{project.info.role}</td>
-                <td>{project.info.client}</td>
-                <td>{project.info.year}</td>
-              </tr>
-            </tbody>
-          </InfoTable>
-          <ViewMoreLink href={project.info.link}>View more</ViewMoreLink>
-        </Col>
-      </Slide>
+      <Tween key={project.id} from={{ x: "-100%" }} to={{ x: "0%" }}>
+        <Slide backgroundColor={project.backgroundColor} className="panel">
+          <Col className="col-image">
+            <img src={project.pic} alt={project.title} />
+          </Col>
+          <Col className="col-info">
+            <Type>{project.info.type}</Type>
+            <Title>{project.info.title}</Title>
+            <Description>{project.info.description}</Description>
+            <InfoTable>
+              <tbody>
+                <tr>
+                  <th>Role</th>
+                  <th>Client</th>
+                  <th>Year</th>
+                </tr>
+                <tr>
+                  <td>{project.info.role}</td>
+                  <td>{project.info.client}</td>
+                  <td>{project.info.year}</td>
+                </tr>
+              </tbody>
+            </InfoTable>
+            <ViewMoreLink href={project.info.link}>View more</ViewMoreLink>
+          </Col>
+        </Slide>
+      </Tween>
     ))
 
   return (
-    <Controller>
-      <Scene duration = { 600 } pin>
-        <CustomSection ref={sectionRef}>
-          <CustomContainer>
+    <CustomSection ref={sectionRef}>
+      <Controller>
+        <Scene triggerHook="onLeave" duration="300%" pin>
+          {/* <CustomContainer>
             <CustomRow>
-              <SliderWrapper>{renderProjects()}</SliderWrapper>
+              <SliderWrapper> */}
+                <Timeline wrapper={<div id="pinContainer" />}>
+                  {renderProjects()}
+                </Timeline>
+              {/* </SliderWrapper>
             </CustomRow>
-          </CustomContainer>
-        </CustomSection>
-      </Scene>
-    </Controller>
+          </CustomContainer> */}
+        </Scene>
+      </Controller>
+    </CustomSection>
   )
 }
 
