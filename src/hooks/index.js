@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 export const useScroll = () => {
-    const [scroll, setScroll] = useState({});
+    const [scroll, setScroll] = useState(0);
 
     const scrollHandler = e => {
         setScroll(window.scrollY);
@@ -14,9 +14,6 @@ export const useScroll = () => {
         };
     }, []);
 
-    return {
-        scroll, 
-        setScroll
-    };
+    return scroll;
 
 };

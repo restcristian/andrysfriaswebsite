@@ -1,8 +1,9 @@
 import React, { useRef } from "react"
 import { Container, Section, Row } from "../../Layout/CommonStyled"
 import Logo from "../../components/Logo"
-import { useScroll } from '../../hooks';
+import { useScroll } from "../../hooks"
 import styled from "styled-components"
+import { Controller, Scene } from "react-scrollmagic"
 
 const Col = styled.div`
   width: 50%;
@@ -18,8 +19,8 @@ const Col = styled.div`
 `
 const SliderWrapper = styled.div`
   position: relative;
-  display:flex;
-  width:100%;
+  display: flex;
+  width: 100%;
 
   > div {
     &:not(:first-child) {
@@ -28,8 +29,8 @@ const SliderWrapper = styled.div`
       left: 0;
       width: 100%;
       height: 100%;
-      opacity:0;
-      visibility:hidden;
+      opacity: 0;
+      visibility: hidden;
     }
   }
 `
@@ -136,10 +137,9 @@ const CustomSection = styled(Section)`
 `
 
 function ProjectList() {
+  const scroll = useScroll()
+  const sectionRef = useRef(null)
 
-  const [scroll, setScroll] = useScroll();
-  const sectionRef = useRef(null);
-  
   const projects = [
     {
       id: "Project1",
@@ -199,30 +199,36 @@ function ProjectList() {
           <Title>{project.info.title}</Title>
           <Description>{project.info.description}</Description>
           <InfoTable>
-            <tr>
-              <th>Role</th>
-              <th>Client</th>
-              <th>Year</th>
-            </tr>
-            <tr>
-              <td>{project.info.role}</td>
-              <td>{project.info.client}</td>
-              <td>{project.info.year}</td>
-            </tr>
+            <tbody>
+              <tr>
+                <th>Role</th>
+                <th>Client</th>
+                <th>Year</th>
+              </tr>
+              <tr>
+                <td>{project.info.role}</td>
+                <td>{project.info.client}</td>
+                <td>{project.info.year}</td>
+              </tr>
+            </tbody>
           </InfoTable>
           <ViewMoreLink href={project.info.link}>View more</ViewMoreLink>
         </Col>
       </Slide>
-    ));
+    ))
 
   return (
-    <CustomSection ref = {sectionRef}  >
-      <CustomContainer>
-        <CustomRow>
-          <SliderWrapper>{renderProjects()}</SliderWrapper>
-        </CustomRow>
-      </CustomContainer>
-    </CustomSection>
+    <Controller>
+      <Scene duration = { 600 } pin>
+        <CustomSection ref={sectionRef}>
+          <CustomContainer>
+            <CustomRow>
+              <SliderWrapper>{renderProjects()}</SliderWrapper>
+            </CustomRow>
+          </CustomContainer>
+        </CustomSection>
+      </Scene>
+    </Controller>
   )
 }
 
