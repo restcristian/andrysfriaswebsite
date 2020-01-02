@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from "react"
+import {findDOMNode} from 'react-dom'
 import { Container, Section, Row } from "../../Layout/CommonStyled"
 import { useScroll } from "../../hooks"
 import styled from "styled-components"
-import {TimelineMax} from 'gsap';
+import { TimelineMax, TweenMax } from "gsap";
 
 const Col = styled.div`
   width: 50%;
@@ -186,6 +187,13 @@ const DecorGridItem = styled.div`
 	  height:100%;
 	  background:gray;
   }
+  div {
+	  position:absolute;
+	  top:0;
+	  left:0;
+	  width:0;
+	  height:100%;
+  }
 `
 function ProjectList() {
   const scroll = useScroll()
@@ -244,6 +252,9 @@ function ProjectList() {
   ]
   const [slideOriginalDist, setSlideOriginalDist] = useState(0)
   const [isPinned, setIsPinned] = useState(false)
+  const [isAnimationTriggered, setIsAnimationTriggered] = useState(false)
+  const [currentSlideIdx, setCurrentSlideIdx] = useState(0)
+  const slideRefs = useRef([]);
 
   useEffect(() => {
 	setSlideOriginalDist(sectionRef.current.getBoundingClientRect().top)
@@ -252,23 +263,79 @@ function ProjectList() {
   useEffect(() => {
 	if(scroll >= slideOriginalDist && slideOriginalDist !== 0) {
 		setIsPinned(true)
+		if(!isAnimationTriggered) {
+			play()
+		}
    } else {
 		setIsPinned(false)
    }
+  
   }, [scroll])
 
-  if(sectionRef.current) {
-	console.log(scroll);
+  useEffect(() => {
+	setBodyHeight();
+  }, [isAnimationTriggered])
+
+  const setBodyHeight = () => {
+	  const htmlTag = document.querySelector('html');
+	  if(!isAnimationTriggered) {
+		document.body.style.height = `${sectionRef.current.getBoundingClientRect().height * (projects.length)}px`
+		htmlTag.style.overflowY= 'auto'
+	  } else {
+		  htmlTag.style.overflowY = 'hidden'
+	  }
   }
 
+  const play = () => {
+	const currentSlide =  findDOMNode(slideRefs.current[currentSlideIdx])
+	const currentDecorGrid = currentSlide.querySelectorAll('.decor-grid div > div')
+	const nextSlide = findDOMNode(slideRefs.current[currentSlideIdx + 1])
+	const nextDecorGrid = nextSlide.querySelectorAll('.decor-grid div > div')
+
+	TweenMax.set(currentDecorGrid, {css: {left:'0', right:'auto'}})
+
+	TweenMax.staggerTo(currentDecorGrid, 0.2,
+		{ 
+			css: { width:'100%', background:'white'} ,
+			onStart: startAnimation
+		}, .2)
+	TweenMax.staggerTo(nextDecorGrid, 0.2,
+		{ 
+			css: { width:'100%', background:'white'} ,
+		}, .2)
+	TweenMax.to(currentSlide, 0, {autoAlpha:0, delay: 1});
+	TweenMax.to(nextDecorGrid, 0, {css: {left:'auto', right:'0'}, delay: 1.5})
+	TweenMax.staggerTo(nextDecorGrid, 0.2,
+		{ 
+			css: { width:0, background:'white'} ,
+			delay:2
+		}, .2, finishAnimation )
+  }
+
+  const reverse = () => {
+	 console.log('reversed')
+  }
+  
+  const startAnimation = () => {
+	  console.log('start')
+	  setIsAnimationTriggered(true)
+  }
+  const finishAnimation = () => {
+	  console.log('finished')
+	  setIsAnimationTriggered(false)
+	  setCurrentSlideIdx(currentSlideIdx+1)
+  }
   const renderProjects = () =>
-    projects.map(project => (
+    projects.map((project, idx) => (
 		<Slide 
+			id = {`project-${idx}`}
 			backgroundColor={project.backgroundColor} 
 			zIndex = {project.zIndex}
-			className="panel" key = {project.id}>
-			<DecorGrid>
-				{Array(5).fill(0).map((decorItem, idx) => <DecorGridItem key = {idx} />)}
+			className="panel" 
+			ref = {ref => slideRefs.current[idx] = ref}
+			key = {project.id}>
+			<DecorGrid className = 'decor-grid'>
+				{Array(5).fill(0).map((decorItem, decorIndex) => <DecorGridItem key = {decorIndex}><div></div></DecorGridItem>)}
 			</DecorGrid>
           <Col className="col-image">
             <img src={project.pic} alt={project.title} />
@@ -295,9 +362,7 @@ function ProjectList() {
           </Col>
         </Slide>
 	))
-  
-   
-
+	
   return (
     <CustomSection ref={sectionRef} className = {isPinned ? 'pinned': ''} >
 		{renderProjects()}
